@@ -1,3 +1,5 @@
+% Copied from http://uk.mathworks.com/help/bioinfo/ug/creating-get-functions.html
+
 function pmstruct = getpubmed(searchterm,varargin)
 % GETPUBMED Search PubMed database & write results to MATLAB structure
 % Error checking for required input SEARCHTERM
