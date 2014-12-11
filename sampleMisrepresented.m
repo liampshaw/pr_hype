@@ -7,7 +7,7 @@ universities = char('Birmingham', 'Bristol', 'Cambridge', ...
 concordantScores = char('Same', 'Weaker', 'Stronger', 'NA');
 
 % file to write to
-fileID = fopen('worstOffendersSample.txt', 'w');
+fileID = fopen('sampleMisrepresented.txt', 'w');
 fprintf(fileID, 'Reference\tUniversity\tJournalTitle\tAuthors\tPRTitle\tSample_journal\tSample_PR\tAdvice_exaggeration\n');
 
 % Loop through struct and check if sample changes between journal and PR
