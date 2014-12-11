@@ -4,11 +4,10 @@ universities = char('Birmingham', 'Bristol', 'Cambridge', ...
     'Kings','Leeds', 'Liverpool', 'LSE', 'Manchester', ...
     'Newcastle', 'Nottingham', 'Oxford','Queens Belfast', ...
     'Sheffield', 'Southampton', 'UCL', 'Warwick');
-concordantScores = char('Same', 'Weaker', 'Stronger', 'NA');
 
 % file to write to
 fileID = fopen('worstOffendersSample.txt', 'w');
-fprintf(fileID, 'Reference\tUniversity\tJournalTitle\tAuthors\tPRTitle\tSample_journal\tSample_PR\tAdvice_exaggeration\n');
+fprintf(fileID, 'Reference\tUniversity\tJournalTitle\tAuthors\tPRTitle\tSample_journal\tSample_PR\tPR_exaggerationScore\n');
 
 % Loop through struct and check if sample changes between journal and PR
 for n=1:462,
@@ -40,15 +39,16 @@ for n=1:462,
             authors = '--too many PubMed results--';
         end
         
-        % also see whether the advice was exaggerated (higher score is more
-        % explicit)
-        adviceExaggerated =  PRs(n).PR.Advice.Code-PRs(n).Journal.Advice.Code;        
+        % also see whether the advice was exaggerated, and the causation
+         if PRs(n).PR.Advice.Code==1
+        totalAdvice = totalAdvice + 1;
+        if PRs(n).Journal.Advice.Code==0  
        
         % write strings to file
 	    fprintf(fileID, '%s\t%s\t%s\t%s\t%s\t%d: %s\t%d: %s\t%f\n', reference, ...
             university, journalTitle, authors, ...       
     PRTitle, PRs(n).Journal.Sample.Code, sample_Journal, ...
-            PRs(n).PR.Sample.Code, sample_PR, adviceExaggerated);
+            PRs(n).PR.Sample.Code, sample_PR, );
         
     end 
         
