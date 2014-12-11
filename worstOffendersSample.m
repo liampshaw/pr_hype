@@ -21,10 +21,10 @@ for n=1:462,
             if isempty(pubmed_data.Authors) == 0
                 authors = strjoin(pubmed_data.Authors, ',');
             else
-                authors = 'PubMed data not found'
+                authors = '--no PubMed data found--';
             end
         else
-            authors = 'Too many PubMed results to identify'
+            authors = '--too many PubMed results--';
         end
         
        
