@@ -34,9 +34,9 @@ dbOpt = '&db=pubmed';
 
 % Set term parameter to SEARCHTERM and PUBDATE 
 % (Default PUBDATE is '')
-termOpt = ['&term=',searchterm,'+AND+',pubdate];
+termOpt = ['&term=',searchterm];
 
-% Set report parameter to medline
+% % Set report parameter to medline
 reportOpt = '&report=medline';
 
 % Set format parameter to text
@@ -47,6 +47,8 @@ formatOpt = '&format=text';
 maxOpt = ['&dispmax=',num2str(maxnum)];
 % Create search URL
 searchURL = [baseSearchURL,dbOpt,termOpt,reportOpt,formatOpt,maxOpt];
+%searchURL = ['http://www.ncbi.nlm.nih.gov/pubmed?term=', searchterm];
+
 medlineText = urlread(searchURL);
 hits = regexp(medlineText,'PMID-.*?(?=PMID|</pre>$)','match');
 pmstruct = struct('PubMedID','','PublicationDate','','Title','',...
