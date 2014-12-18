@@ -39,9 +39,7 @@ for n=1:462,
     
     % AUTHORS
     % Get details of authors from PubMed
-    search_term =strrep(journalTitle,sprintf(' '), '%5BTitle%5D+AND+');
-    search_term = strcat(search_term, '%5BTitle%5D');
-    pubmed_data = vertcat(getpubmed(search_term));
+    pubmed_data = vertcat(getpubmed(formatTitleForPubMed(journalTitle)));
     if size(pubmed_data) == [1 1]
         if isempty(pubmed_data.Authors) == 0
             authors = strjoin(pubmed_data.Authors, ',');

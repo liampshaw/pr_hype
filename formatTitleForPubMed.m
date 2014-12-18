@@ -1,0 +1,13 @@
+function search_term = formatTitleForPubMed(title);
+search_term = strrep(title, ' and ', ' ');
+search_term = strrep(search_term, ' of ', ' ');
+search_term = strrep(search_term, ' the ', ' ');
+search_term = strrep(search_term, ' for ', ' ');
+search_term = strrep(search_term, ' a ', ' ');
+search_term = strrep(search_term, ',', '');
+search_term = strrep(search_term, ':', '');
+search_term = strrep(search_term, ';', '');
+search_term = strrep(search_term, '(', '');
+search_term = strrep(search_term, ')', '');
+search_term = strrep(search_term,sprintf(' '), '%5BTitle%5D+AND+');
+search_term = strcat(search_term, '%5BTitle%5D');
