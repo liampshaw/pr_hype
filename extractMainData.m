@@ -44,8 +44,8 @@ for n=1:462,
     paperURL = 'http://www.ncbi.nlm.nih.gov/pubmed/';
     pubmed_data_not_title = vertcat(getpubmed(strrep(search_term, ' ', '%20')));
     if size(pubmed_data_not_title) == [1 1]
-        singlePubMedResult = 1;
         if isempty(pubmed_data_not_title.Authors) == 0
+            singlePubMedResult = 1;
             authors = strjoin(pubmed_data_not_title.Authors, ',');
             paperURL = strcat(paperURL, pubmed_data_not_title.PubMedID);
         else
