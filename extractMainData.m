@@ -15,7 +15,7 @@ universities = char('Birmingham', 'Bristol', 'Cambridge', ...
 % file to write to
 fileID = fopen('mainData.tsv', 'w');
 headerString = ['Reference\tUniversity\tJournalTitle\t',...
-    'Authors\tPRTitle\t',...
+    'Authors\tSingle PubMed result?\tPRTitle\t',...
     'Sample_changed\tSample_journal\tSample_PR\t',...
     'Advice_exaggeration\tAdvice_journal\tAdvice_PR\t',...
     'Causation_exaggeration\tCausation_journal\tCausation_PR\t',...
@@ -25,7 +25,7 @@ fprintf(fileID, headerString);
 
 % Loop through the data and extract the information
 for n=1:462,
-    disp(n) % to display progress
+    %disp(n) % to display progress
     
     % MAIN INFO
     % Create strings for writing to file
@@ -39,15 +39,34 @@ for n=1:462,
     
     % AUTHORS
     % Get details of authors from PubMed
-    pubmed_data = vertcat(getpubmed(formatTitleForPubMed(journalTitle)));
-    if size(pubmed_data) == [1 1]
-        if isempty(pubmed_data.Authors) == 0
-            authors = strjoin(pubmed_data.Authors, ',');
+    singlePubMedResult = 0; % Bool to indicate whether only one PubMed result returned
+    search_term = lower(journalTitle);
+    pubmed_data_not_title = vertcat(getpubmed(strrep(search_term, ' ', '%20')));
+    if size(pubmed_data_not_title) == [1 1]
+        singlePubMedResult = 1;
+        if isempty(pubmed_data_not_title.Authors) == 0
+            authors = strjoin(pubmed_data_not_title.Authors, ',');
         else
+            %search_term = strrep(journalTitle,sprintf(' '), '%5BTitle%5D+AND+');
+            %search_term = strcat(search_term, '%5BTitle%5D');
+            %pubmed_data = vertcat(getpubmed(formatTitleForPubMed(journalTitle)));
+            disp(n)
             authors = '--no PubMed data found--';
+            disp(search_term)
         end
     else
-        authors = '--too many PubMed results--';
+        search_term = formatTitleForPubMed(journalTitle);
+        pubmed_data = vertcat(getpubmed(search_term));
+        if size(pubmed_data) == [1 1]
+            if isempty(pubmed_data.Authors) == 0
+                authors = strjoin(pubmed_data.Authors, ',');
+            else
+                %search_term = strrep(journalTitle,sprintf(' '), '%5BTitle%5D+AND+');
+                %search_term = strcat(search_term, '%5BTitle%5D');
+                %pubmed_data = vertcat(getpubmed(formatTitleForPubMed(journalTitle)));                
+                authors = strjoin(pubmed_data_not_title(1).Authors, ',');
+            end
+        end
     end
     
     % SAMPLE GENERALIZATION
@@ -88,11 +107,11 @@ for n=1:462,
     causationExaggeration = num2str(PRs(n).PR.Statement1.Code - ...
         PRs(n).Journal.Statement1.Code);
     if causationPR == '0' % 0 codes for a lack of mention
-        causationPR = 'Not mentioned'
+        causationPR = 'Not mentioned';
     end
 
     if causationJournal == '0' % 0 codes for a lack of mention
-        causationJournal = 'Not mentioned'
+        causationJournal = 'Not mentioned';
     end
    
     % ADVICE EXAGGERATION
@@ -119,7 +138,7 @@ for n=1:462,
 
     % WRITE STRINGS TO FILE
     entryString = ['%s\t%s\t%s\t',...
-    '%s\t%s\t',...
+    '%s\t%d\t%s\t',...
     '%d\t%d: %s\t%d: %s\t',...
     '%d\t%d\t%d\t',...
     '%s\t%s\t%s\t',...
@@ -133,7 +152,7 @@ for n=1:462,
     '%s\t%s\t%s\t',...
     '%s\n'], ...
         reference, university, journalTitle,...
-        authors, PRTitle, ...       
+        authors, singlePubMedResult, PRTitle, ...       
         sampleChanged, PRs(n).Journal.Sample.Code, sample_Journal, PRs(n).PR.Sample.Code, sample_PR,...
         adviceExaggerated, adviceJournal, advicePR, ...
         causationExaggeration, causationJournal, causationPR,...
